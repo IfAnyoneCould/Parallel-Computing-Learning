@@ -15,5 +15,6 @@ size_t resize_int_vector(int_vector *v, size_t n);
 int get_int_vector(int_vector *v, size_t n);
 void set_int_vector(int_vector *v, size_t n, int x);
 int_vector *get_reversed_int_vector(int_vector *v);
+int *get_array_int_vector(int_vector *v);
 
 #endif

@@ -21,5 +21,8 @@ void set_vec_vector_elem(vec_vector *v, size_t row, size_t col, int x);
 int_vector *get_vec_vector_sizes(vec_vector *v);
 void push_int_vector(int_vector *v, int x);
 void reverse_int_vector(int_vector *v);
+int_vector *flatten_vec_vector(vec_vector *v);
+int_vector *get_slice_int_vector(int_vector *v, size_t start, size_t end);
+void reverse_all_vec_vector(vec_vector *v);
 
 #endif

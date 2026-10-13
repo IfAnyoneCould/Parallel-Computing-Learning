@@ -74,3 +74,25 @@ int_vector *get_vec_vector_sizes(vec_vector *v) {
   }
   return p;
 }
+
+int_vector *flatten_vec_vector(vec_vector *v) {
+  int_vector *output = create_int_vector(0);
+
+  for (size_t i = 0; i < v->size; i++) {
+    int_vector *vec = get_vec_vector(v, i);
+    for (size_t j = 0; j < vec->size; j++) {
+      push_int_vector(output, get_int_vector(vec, j));
+    }
+  }
+
+  return output;
+}
+
+void reverse_all_vec_vector(vec_vector *v) {
+  if (!v)
+    return;
+  for (size_t i = 0; i < v->size; i++) {
+    int_vector *vec = get_vec_vector(v, i);
+    set_vec_vector(v, i, get_reversed_int_vector(vec));
+  }
+}

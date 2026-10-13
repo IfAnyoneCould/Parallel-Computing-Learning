@@ -62,3 +62,24 @@ void reverse_int_vector(int_vector *v) {
   }
   v = output;
 }
+
+// TODO this is NOT safe, add checks
+int_vector *get_slice_int_vector(int_vector *v, size_t start, size_t end) {
+  int_vector *output = create_int_vector(0);
+  for (size_t i = start; i < end; i++) {
+    push_int_vector(output, get_int_vector(v, i));
+  }
+  return output;
+}
+
+int *get_array_int_vector(int_vector *v) {
+  if (!v)
+    return NULL;
+  int *output = malloc(v->size * sizeof(int));
+
+  for (size_t i = 0; i < v->size; i++) {
+    output[i] = get_int_vector(v, i);
+  }
+
+  return output;
+}
