@@ -49,7 +49,7 @@ int_vector *merge_piles(int_vector *a, int_vector *b) {
     bool which = a_pos < a->size;
     int_vector *remainder = which ? a : b;
     int pos = which ? a_pos : b_pos;
-    for (size_t i = 0; i < output->size - out_pos - 1; i++) {
+    for (size_t i = 0; i < output->size - out_pos; i++) {
       set_int_vector(output, out_pos + i, get_int_vector(remainder, i + pos));
     }
   }

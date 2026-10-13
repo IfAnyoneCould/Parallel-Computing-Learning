@@ -49,7 +49,7 @@ void push_int_vector(int_vector *v, int x) { set_int_vector(v, v->size, x); }
 
 int_vector *get_reversed_int_vector(int_vector *v) {
   int_vector *output = create_int_vector(0);
-  for (size_t i = v->size - 1; i >= 0; i--) {
+  for (int i = v->size - 1; i >= 0; i--) {
     push_int_vector(output, get_int_vector(v, i));
   }
   return output;
@@ -57,7 +57,7 @@ int_vector *get_reversed_int_vector(int_vector *v) {
 
 void reverse_int_vector(int_vector *v) {
   int_vector *output = create_int_vector(0);
-  for (size_t i = v->size - 1; i >= 0; i--) {
+  for (int i = v->size - 1; i >= 0; i--) {
     push_int_vector(output, get_int_vector(v, i));
   }
   v = output;
