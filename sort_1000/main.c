@@ -100,7 +100,6 @@ void patience_sort(int *nums, int size) {
 
   memcpy(src, get_array_int_vector(flattened), size * sizeof(int));
   delete_int_vector(flattened);
-  delete_vec_vector(piles);
 
   starts[0] = 0;
 
@@ -108,7 +107,9 @@ void patience_sort(int *nums, int size) {
     int_vector *vec = get_vec_vector(piles, i - 1);
     starts[i] = starts[i - 1] + vec->size;
   }
+
   starts[pile_size] = size;
+  delete_vec_vector(piles);
 
   while (runs > 1) {
     int new_starts[pile_size + 1];
@@ -145,30 +146,52 @@ bool verify_sorted(int *nums, size_t size) {
   return true;
 }
 
+static int cmp_int(const void *a, const void *b) {
+  int x = *(const int *)a, y = *(const int *)b;
+  return (x > y) - (x < y);
+}
+
+static void qsort_int(int *a, int n) { qsort(a, n, sizeof(int), cmp_int); }
+
+static double time_sort(void (*sort)(int *, int), int *input, int *work, int n,
+                        int trials) {
+  double best = 1e300;
+  for (int t = 0; t < trials; t++) {
+    memcpy(work, input, n * sizeof(int));
+    clock_t t0 = clock();
+    sort(work, n);
+    double ms = (double)(clock() - t0) * 1000.0 / CLOCKS_PER_SEC;
+    if (ms < best)
+      best = ms;
+  }
+  return best;
+}
+
 int main() {
   xor_state = (uint32_t)time(NULL);
 
-  int arr_size = 100000;
+  int sizes[] = {1000, 10000, 100000, 1000000};
+  int trials = 5;
 
-  int *nums = gen_rand_array(arr_size, 0, 1000);
+  printf("%10s %12s %12s %8s\n", "n", "patience ms", "qsort ms", "correct");
+  for (size_t s = 0; s < sizeof(sizes) / sizeof(sizes[0]); s++) {
+    int n = sizes[s];
+    int *input = gen_rand_array(n, 0, 1000);
+    int *ref = malloc(n * sizeof(int));
+    int *work = malloc(n * sizeof(int));
 
-  /*
-  for (int i = 0; i < arr_size; i++) {
-    printf("%d ", nums[i]);
+    memcpy(ref, input, n * sizeof(int));
+    qsort_int(ref, n);
+
+    double p = time_sort(patience_sort, input, work, n, trials);
+    bool ok = verify_sorted(work, n) && memcmp(work, ref, n * sizeof(int)) == 0;
+    double q = time_sort(qsort_int, input, work, n, trials);
+
+    printf("%10d %12.2f %12.2f %8s\n", n, p, q, ok ? "yes" : "NO");
+
+    free(input);
+    free(ref);
+    free(work);
   }
-  printf("\n\n");
-  */
-
-  printf("sorted: %d\n", verify_sorted(nums, arr_size));
-  patience_sort(nums, arr_size);
-  printf("sorted: %d\n", verify_sorted(nums, arr_size));
-
-  /*
-  for (size_t i = 0; i < arr_size; i++) {
-    printf("%d ", nums[i]);
-  }
-
-  printf("\n");
-  */
   return 0;
 }

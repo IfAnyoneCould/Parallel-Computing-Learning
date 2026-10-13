@@ -6,6 +6,7 @@
 
 typedef struct int_vector {
   size_t size;
+  size_t capacity;
   int *data;
 } int_vector;
 

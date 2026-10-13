@@ -4,8 +4,9 @@
 int_vector *create_int_vector(size_t n) {
   int_vector *p = malloc(sizeof(*p));
   if (p) {
-    p->data = malloc(n * sizeof(int));
+    p->data = malloc(8 * sizeof(int));
     p->size = n;
+    p->capacity = 8;
   }
   return p;
 }
@@ -22,9 +23,8 @@ size_t resize_int_vector(int_vector *v, size_t n) {
     int *p = realloc(v->data, n * sizeof(int));
     if (p) {
       v->data = p;
-      v->size = n;
+      return n;
     }
-    return v->size;
   }
   return 0;
 }
@@ -38,9 +38,11 @@ int get_int_vector(int_vector *v, size_t n) {
 
 void set_int_vector(int_vector *v, size_t n, int x) {
   if (v) {
-    if (n >= v->size) {
-      resize_int_vector(v, n + 1);
+    if (n >= v->capacity) {
+      v->capacity *= 2;
+      resize_int_vector(v, v->capacity);
     }
+    v->size += 1;
     v->data[n] = x;
   }
 }
